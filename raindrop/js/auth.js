@@ -1,15 +1,15 @@
 window.addEventListener('DOMContentLoaded', (event) => {
-    browser.tabs.getCurrent().then(
-        (tab) => {
-            return browser.runtime.sendMessage({
-                "type": "auth",
-                "oauth_response": "ok",
-                "service": "raindrop",
-                "tab_index": tab.index
-            });
-        },
-        (error) => {
-            console.log(error);
-        }
-    );
+    const code = new URLSearchParams(document.location.search).get("code");
+    const params = {
+        "type": "auth",
+        "oauth_response": "ok",
+        "service": "raindrop",
+        "code": code
+    };
+
+    const authEvent = new CustomEvent('AuthEvent',{
+        bubbles: true,
+        detail: params
+    });
+    document.dispatchEvent(authEvent);
 });
